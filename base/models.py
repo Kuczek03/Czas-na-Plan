@@ -26,8 +26,8 @@ class User_tasks(models.Model):
     user_id=models.ForeignKey('Users',on_delete=models.CASCADE)
     task_id=models.ForeignKey('Tasks',on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.user_id + ":"+ self.task_id
+    def __int__(self):
+        return self.user_id
 class Labels(models.Model):
     label_id=models.AutoField(primary_key=True)
     label_name=models.CharField(max_length=200)
@@ -39,7 +39,7 @@ class Label_tasks(models.Model):
     label_id=models.ForeignKey('Labels',on_delete=models.CASCADE)
     task_id=models.ForeignKey('Tasks',on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.task_id + ":" + self.label_id
+    def __int__(self):
+        return self.task_id
 
 
