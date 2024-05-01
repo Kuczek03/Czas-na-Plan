@@ -1,6 +1,9 @@
 from django.db import models
 
 # Create your models here.
+from django.contrib.auth.models import User
+
+
 class Tasks(models.Model):
     task_id=models.AutoField(primary_key=True)
     task_name=models.CharField(max_length=200)
@@ -13,18 +16,18 @@ class Tasks(models.Model):
     def __str__(self):
         return self.task_name
 
-class Users(models.Model):
-    user_id=models.AutoField(primary_key=True)
-    user_username=models.CharField(max_length=60)
-    user_password=models.CharField(max_length=40)
-    user_role=models.CharField(max_length=20)
-    user_email=models.EmailField()
-
-    def __str__(self):
-        return self.user_username
+# class Users(models.Model):
+#     user_id=models.AutoField(primary_key=True)
+#     user_username=models.CharField(max_length=60)
+#     user_password=models.CharField(max_length=40)
+#     user_role=models.CharField(max_length=20)
+#     user_email=models.EmailField()
+#
+#     def __str__(self):
+#         return self.user_username
 
 class User_tasks(models.Model):
-    user_id=models.ForeignKey('Users',on_delete=models.CASCADE)
+    user_id=models.ForeignKey(User,on_delete=models.CASCADE)
     task_id=models.ForeignKey('Tasks',on_delete=models.CASCADE)
 
     def __int__(self):
@@ -46,13 +49,13 @@ class Label_tasks(models.Model):
 class Dashboards(models.Model):
     dashboard_id=models.AutoField(primary_key=True)
     dashboard_name=models.CharField(max_length=200)
-    dashboard_admin_id=models.ForeignKey(Users,on_delete=models.CASCADE)
+    dashboard_admin_id=models.ForeignKey(User,on_delete=models.CASCADE)
 
     def __str__(self):
         return self.dashboard_name
 
 class Users_Dashboards(models.Model):
-    user_id=models.ForeignKey('Users',on_delete=models.CASCADE)
+    user_id=models.ForeignKey(User,on_delete=models.CASCADE)
     dashboard_id=models.ForeignKey('Dashboards',on_delete=models.CASCADE)
 
     def __int__(self):
