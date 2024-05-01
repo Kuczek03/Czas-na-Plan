@@ -8,6 +8,7 @@ class Tasks(models.Model):
     task_start_date=models.DateField()
     task_end_date=models.DateField()
     task_status=models.CharField(max_length=20)
+    board_id=models.ForeignKey('Dashboards', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.task_name
@@ -42,4 +43,17 @@ class Label_tasks(models.Model):
     def __int__(self):
         return self.task_id
 
+class Dashboards(models.Model):
+    dashboard_id=models.AutoField(primary_key=True)
+    dashboard_name=models.CharField(max_length=200)
+    dashboard_admin_id=models.ForeignKey(Users,on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.dashboard_name
+
+class Users_Dashboards(models.Model):
+    user_id=models.ForeignKey('Users',on_delete=models.CASCADE)
+    dashboard_id=models.ForeignKey('Dashboards',on_delete=models.CASCADE)
+
+    def __int__(self):
+        return self.user_id
