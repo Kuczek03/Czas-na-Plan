@@ -1,5 +1,5 @@
 from django import forms
-from .models import Tasks
+from .models import Tasks, Dashboards
 
 class TaskForm(forms.ModelForm):
     class Meta:
@@ -23,4 +23,15 @@ class TaskForm(forms.ModelForm):
             'task_description': forms.TextInput(attrs={'placeholder': ''}),
             'task_start_date' : forms.DateInput(attrs={'placeholder': ''}),
             'task_end_date': forms.DateInput(attrs={'placeholder': ''})
+        }
+class TabForm(forms.ModelForm):
+    class Meta:
+        model = Dashboards
+        fields = '__all__'
+        labels = {
+            'dashboard_name': 'Dashboard Name',
+        }
+
+        widgets ={
+            'dashboard_name': forms.TextInput(attrs={'placeholder': ''})
         }
