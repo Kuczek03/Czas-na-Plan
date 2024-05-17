@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ dashboard.dashboard_name }} - Tasks</title>
+    <style>
+        .column {
+            float: left;
+            width: 30%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin: 10px;
+        }
+        .column h2 {
+            text-align: center;
+        }
+        .task {
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        .task form {
+            display: inline;
+        }
+        .task button {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ dashboard.dashboard_name }} - Tasks</h1>
+    <a href="{% url 'home' %}">Back to Home</a>
+    <a href="{% url 'createTask' dashboard.dashboard_id %}">Create Task</a>
+    <div class="tasks">
+        <div class="column">
+            <h2>Tasks To Do</h2>
+            {% for task in tasks_to_do %}
+                <div class="task">
+                    <p><strong>{{ task.task_name }}</strong></p>
+                    <p>{{ task.task_description }}</p>
+                    <p>Start Date: {{ task.task_start_date }}</p>
+                    <p>End Date: {{ task.task_end_date }}</p>
+                    <form method="post" action="{% url 'updateTask' task.task_id %}">
+                        {% csrf_token %}
+                        <select name="status">
+                            {% for key, value in task.STATUS_CHOICES %}
+                                <option value="{{ key }}" {% if task.task_status == key %}selected{% endif %}>{{ value }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit">Update</button>
+                    </form>
+                    <form method="post" action="{% url 'deleteTask' task.task_id %}">
+                        {% csrf_token %}
+                        <button type="submit">Delete</button>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="column">
+            <h2>Tasks In Progress</h2>
+            {% for task in tasks_in_progress %}
+                <div class="task">
+                    <p><strong>{{ task.task_name }}</strong></p>
+                    <p>{{ task.task_description }}</p>
+                    <p>Start Date: {{ task.task_start_date }}</p>
+                    <p>End Date: {{ task.task_end_date }}</p>
+                    <form method="post" action="{% url 'updateTask' task.task_id %}">
+                        {% csrf_token %}
+                        <select name="status">
+                            {% for key, value in task.STATUS_CHOICES %}
+                                <option value="{{ key }}" {% if task.task_status == key %}selected{% endif %}>{{ value }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit">Update</button>
+                    </form>
+                    <form method="post" action="{% url 'deleteTask' task.task_id %}">
+                        {% csrf_token %}
+                        <button type="submit">Delete</button>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="column">
+            <h2>Tasks Done</h2>
+            {% for task in tasks_done %}
+                <div class="task">
+                    <p><strong>{{ task.task_name }}</strong></p>
+                    <p>{{ task.task_description }}</p>
+                    <p>Start Date: {{ task.task_start_date }}</p>
+                    <p>End Date: {{ task.task_end_date }}</p>
+                    <form method="post" action="{% url 'updateTask' task.task_id %}">
+                        {% csrf_token %}
+                        <select name="status">
+                            {% for key, value in task.STATUS_CHOICES %}
+                                <option value="{{ key }}" {% if task.task_status == key %}selected{% endif %}>{{ value }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit">Update</button>
+                    </form>
+                    <form method="post" action="{% url 'deleteTask' task.task_id %}">
+                        {% csrf_token %}
+                        <button type="submit">Delete</button>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

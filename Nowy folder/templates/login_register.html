@@ -1,0 +1,26 @@
+{% include 'home.html' %}
+<br>
+<h1>test</h1>
+{% block content %}
+<div>
+<form method="POST" action="">
+    {% csrf_token %}
+    <label>Login</label>
+    <input type="text" name="username" placeholder="Podaj login"/>
+    <label>Haslo</label>
+    <input type="password" name="password" placeholder="Podaj haslo"/>
+    {% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+    <input type="submit" value="Login"/>
+
+</form>
+
+</div>
+
+
+{% endblock content %}

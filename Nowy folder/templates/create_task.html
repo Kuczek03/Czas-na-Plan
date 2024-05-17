@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Task</title>
+</head>
+<body>
+    <h1>Create Task for {{ dashboard.dashboard_name }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Create Task</button>
+    </form>
+    <a href="{% url 'dashboard_tasks' dashboard.dashboard_id %}">Back to Dashboard</a>
+</body>
+</html>
