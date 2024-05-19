@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Czas na plan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: #002983;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.5em;
+            font-family: 'Pacifico', cursive;
+        }
+        header .logout-button {
+            background-color: white;
+            color: #002983;
+            border: 2px solid #002983;
+            border-radius: 10px;
+            padding: 5px 10px;
+            font-size: 1em;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        header .logout-button:hover {
+            background-color: #002983;
+            color: white;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #002983;
+            font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .admin-dashboards h2 {
+            color: #333;
+            border-bottom: 2px solid #002983;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .dashboard {
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: box-shadow 0.5s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .dashboard:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .dashboard a {
+            color: #002983;
+            text-decoration: none;
+            font-size: 1.2em;
+            display: block;
+            height: 100%;
+            width: 100%;
+        }
+        .dashboard a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Czas na plan</h1>
+        {% if request.user.is_authenticated %}
+            <a href="{% url 'logout' %}" class="logout-button">Logout</a>
+        {% endif %}
+    </header>
+    <div class="container">
+        <nav>
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'dashboards' %}">Create new Dashboard</a>
+                <a href="{% url 'tasks' %}">Tasks</a>
+            {% else %}
+                <a href="{% url 'register' %}">Register</a>
+            {% endif %}
+        </nav>
+
+        {% if admin_dashboards %}
+        <div class="admin-dashboards">
+            <h2>Dashboards</h2>
+            {% for dashboard in admin_dashboards %}
+                <a href="{% url 'dashboard_tasks' dashboard.dashboard_id %}" class="dashboard">
+                    {{ dashboard.dashboard_name }}
+                </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+        }
+        header {
+            background-color: #002983;
+            font-family: 'Pacifico', cursive;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            width: 100%;
+        }
+        .container {
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+            margin-top: 30px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px darkgray;
+            text-align: center;
+        }
+        .container h2 {
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .login-button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #002983;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .login-button:hover {
+            background-color: #002983;
+        }
+        .register-link {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #002983;
+            text-decoration: none;
+            opacity: 0.6;
+        }
+        .register-link:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Czas na plan</h1>
+    </header>
+
+    <div class="container">
+        {% if not request.user.is_authenticated %}
+        <h2>Login</h2>
+        <form method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="login-button">LOGIN</button>
+        </form>
+        <a href="{% url 'register' %}" class="register-link">Not registered? Create an account</a>
+        {% else %}
+        <nav>
+            <a href="{% url 'logout' %}">Logout</a>
+            <a href="{% url 'dashboards' %}">Dashboards</a>
+            <a href="{% url 'tasks' %}">Tasks</a>
+        </nav>
+        {% endif %}
+    </div>
+    {% if admin_dashboards and request.user.is_authenticated %}
+    <div class="container admin-dashboards">
+        <h2>Dashboards</h2>
+        {% for dashboard in admin_dashboards %}
+            <div class="dashboard">
+                <a href="{% url 'dashboard_tasks' dashboard.dashboard_id %}">{{ dashboard.dashboard_name }}</a>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</body>
+</html>

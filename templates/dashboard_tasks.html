@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ dashboard.dashboard_name }} - Tasks</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #002983;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header .title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .header .title2 {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            font-family: 'Pacifico', cursive;
+        }
+        .header .buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .header .buttons a, .header .buttons button {
+            background-color: white;
+            color: #002983;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .header .buttons a:hover, .header .buttons button:hover {
+            background-color: #002983;
+            color: white;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .columns {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .column {
+            flex: 1;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .column h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .task {
+            background-color: #fff;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 1px 2px black;
+            cursor: grab;
+        }
+        .task p {
+            margin: 5px 0;
+        }
+        .task form {
+            display: inline-block;
+            margin-right: 5px;
+        }
+        .task button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 10px;
+            background-color: #002983;
+            color: white;
+            cursor: pointer;
+        }
+        .task button:hover {
+            background-color: #002983;
+        }
+        .task select {
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+        .column.drag-over {
+            border: 2px dashed #002983;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="title2">Czas na plan</div>
+        <div class="title">
+            {{ dashboard.dashboard_name }}
+        </div>
+        <div class="buttons">
+            <a href="{% url 'home' %}">Boards</a>
+            <a href="{% url 'createTask' dashboard.dashboard_id %}">Create Task</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="columns">
+            <div class="column" id="tasks-to-do">
+                <h2>Tasks To Do</h2>
+                {% for task in tasks_to_do %}
+                    <div class="task" draggable="true" id="task-{{ task.task_id }}">
+                        <p><strong>{{ task.task_name }}</strong></p>
+                        <p>{{ task.task_description }}</p>
+                        <p>Start Date: {{ task.task_start_date }}</p>
+                        <p>End Date: {{ task.task_end_date }}</p>
+                        {% comment %} <form method="post" action="{% url 'updateTask' task.task_id %}">
+                            {% csrf_token %}
+                            <select name="status">
+                                {% for key, value in task.STATUS_CHOICES %}
+                                    <option value="{{ key }}" {% if task.task_status == key %}selected{% endif %}>{{ value }}</option>
+                                {% endfor %}
+                            </select>
+                            <button type="submit">Update</button>
+                        </form> {% endcomment %}
+                        <form method="post" action="{% url 'deleteTask' task.task_id %}">
+                            {% csrf_token %}
+                            <button type="submit">Delete</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="column" id="tasks-in-progress">
+                <h2>Tasks In Progress</h2>
+                {% for task in tasks_in_progress %}
+                    <div class="task" draggable="true" id="task-{{ task.task_id }}">
+                        <p><strong>{{ task.task_name }}</strong></p>
+                        <p>{{ task.task_description }}</p>
+                        <p>Start Date: {{ task.task_start_date }}</p>
+                        <p>End Date: {{ task.task_end_date }}</p>
+                        {% comment %} <form method="post" action="{% url 'updateTask' task.task_id %}">
+                            {% csrf_token %}
+                            <select name="status">
+                                {% for key, value in task.STATUS_CHOICES %}
+                                    <option value="{{ key }}" {% if task.task_status == key %}selected{% endif %}>{{ value }}</option>
+                                {% endfor %}
+                            </select>
+                            <button type="submit">Update</button>
+                        </form> {% endcomment %}
+                        <form method="post" action="{% url 'deleteTask' task.task_id %}">
+                            {% csrf_token %}
+                            <button type="submit">Delete</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="column" id="tasks-done">
+                <h2>Tasks Done</h2>
+                {% for task in tasks_done %}
+                    <div class="task" draggable="true" id="task-{{ task.task_id }}">
+                        <p><strong>{{ task.task_name }}</strong></p>
+                        <p>{{ task.task_description }}</p>
+                        <p>Start Date: {{ task.task_start_date }}</p>
+                        <p>End Date: {{ task.task_end_date }}</p>
+                        {% comment %} <form method="post" action="{% url 'updateTask' task.task_id %}">
+                            {% csrf_token %}
+                            <select name="status">
+                                {% for key, value in task.STATUS_CHOICES %}
+                                    <option value="{{ key }}" {% if task.task_status == key %}selected{% endif %}>{{ value }}</option>
+                                {% endfor %}
+                            </select>
+                            <button type="submit">Update</button>
+                        </form> {% endcomment %}
+                        <form method="post" action="{% url 'deleteTask' task.task_id %}">
+                            {% csrf_token %}
+                            <button type="submit">Delete</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tasks = document.querySelectorAll('.task');
+            const columns = document.querySelectorAll('.column');
+
+            tasks.forEach(task => {
+                task.addEventListener('dragstart', handleDragStart);
+                task.addEventListener('dragend', handleDragEnd);
+            });
+
+            columns.forEach(column => {
+                column.addEventListener('dragover', handleDragOver);
+                column.addEventListener('dragenter', handleDragEnter);
+                column.addEventListener('dragleave', handleDragLeave);
+                column.addEventListener('drop', handleDrop);
+            });
+
+            function handleDragStart(e) {
+                this.classList.add('dragging');
+                e.dataTransfer.setData('text/plain', this.id);
+            }
+
+            function handleDragEnd() {
+                this.classList.remove('dragging');
+            }
+
+            function handleDragOver(e) {
+                e.preventDefault();
+            }
+
+            function handleDragEnter(e) {
+                e.preventDefault();
+                this.classList.add('drag-over');
+            }
+
+            function handleDragLeave() {
+                this.classList.remove('drag-over');
+            }
+
+            function handleDrop(e) {
+                const id = e.dataTransfer.getData('text/plain');
+                const draggable = document.getElementById(id);
+                this.appendChild(draggable);
+                this.classList.remove('drag-over');
+                
+            }
+        });
+    </script>
+</body>
+</html>
