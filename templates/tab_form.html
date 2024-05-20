@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Dashboard</title>
+    <title>Home</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,100 +12,95 @@
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: flex-start;
             height: 100vh;
         }
-        .form-container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        header {
+            background-color: #002983;
+            font-family: 'Pacifico', cursive;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
             width: 100%;
-            max-width: 500px;
         }
-        .form-container h2 {
+        .container {
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+            margin-top: 30px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px darkgray;
+        }
+        .container h2 {
             margin-bottom: 20px;
-            color: #333;
             text-align: center;
         }
         .form-group {
             margin-bottom: 15px;
+            text-align: left;
         }
         .form-group label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
         }
-        .form-group input, 
-        .form-group select, 
-        .form-group textarea {
-            width: 100%;
+        .form-group input {
+            width: calc(100% - 22px);
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
             box-sizing: border-box;
-            font-size: 16px;
         }
-        .form-group-user {
-            margin-bottom: 15px;
-        }
-        .form-group-user label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-        .user-entry {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .user-entry input[type="checkbox"] {
-            margin-right: 100px;
-        }
-        .submit-button {
+        .login-button, .submit-button {
             width: 100%;
             padding: 10px;
             border: none;
             border-radius: 4px;
-            background-color: #4CAF50;
+            background-color: #002983;
             color: white;
             font-size: 16px;
             cursor: pointer;
         }
-        .submit-button:hover {
-            background-color: #45a049;
+        .login-button:hover, .submit-button:hover {
+            background-color: #001d66;
         }
-        .error {
-            color: red;
+        .register-link {
+            margin-top: 15px;
             font-size: 14px;
+            color: #002983;
+            text-decoration: none;
+            opacity: 0.6;
+            text-align: center;
+            display: block;
+        }
+        .register-link:hover {
+            opacity: 1;
+        }
+        .user-list {
+            text-align: left;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+        .user-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
         }
     </style>
 </head>
 <body>
-    <div class="form-container">
+    <header>
+        <h1>Czas na plan</h1>
+    </header>
+
+    <div class="container">
         <h2>Create Dashboard</h2>
         <form method="post">
             {% csrf_token %}
-            {% for field in form %}
-                <div class="form-group {% if field.name == "users" %}form-group-user{% endif %}">
-                    {% if field.name == "users" %}
-                        <label>All users:</label>
-                        {% for subfield in field %}
-                            <div class="user-entry">
-                                {{ subfield }}
-                                <label for="{{ subfield.id_for_label }}">{{ subfield.label }}</label>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                        {{ field }}
-                    {% endif %}
-                    {% if field.errors %}
-                        <div class="error">{{ field.errors }}</div>
-                    {% endif %}
-                </div>
-            {% endfor %}
+            {{ form.as_p }}
             <button type="submit" class="submit-button">Create Dashboard</button>
         </form>
     </div>
