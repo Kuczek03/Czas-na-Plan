@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+        }
+        header {
+            background-color: #002983;
+            font-family: 'Pacifico', cursive;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            width: 100%;
+        }
+        .container {
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+            margin-top: 30px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px darkgray;
+        }
+        .container h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .login-button, .submit-button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #002983;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .login-button:hover, .submit-button:hover {
+            background-color: #001d66;
+        }
+        .register-link {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #002983;
+            text-decoration: none;
+            opacity: 0.6;
+            text-align: center;
+            display: block;
+        }
+        .register-link:hover {
+            opacity: 1;
+        }
+        .user-list {
+            text-align: left;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+        .user-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Czas na plan</h1>
+    </header>
+
+    <div class="container">
+        <h2>Create Dashboard</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="submit-button">Create Dashboard</button>
+        </form>
+    </div>
+</body>
+</html>
