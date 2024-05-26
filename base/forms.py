@@ -8,12 +8,12 @@ class TaskForm(forms.ModelForm):
         model = Tasks
         fields = ['task_name', 'task_description', 'task_start_date', 'task_end_date', 'task_status', 'board_id']
         labels = {
-            'task_name': 'Task Name',
-            'task_description': 'Task Description',
-            'task_start_date': 'Task Start Date',
-            'task_end_date': 'Task End Date',
-            'task_status': 'Task Status',
-            'board_id': 'Board'
+            'task_name': 'Nazwa',
+            'task_description': 'Opis',
+            'task_start_date': 'Data rozpoczęcia',
+            'task_end_date': 'Data zakończenia',
+            'task_status': 'Status',
+            'board_id': 'Tablica'
         }
         widgets = {
             'task_name': forms.TextInput(attrs={'placeholder': ''}),
@@ -29,7 +29,7 @@ class TabForm(forms.ModelForm):
         model = Dashboards
         fields = ['dashboard_name', 'users']
         labels = {
-            'dashboard_name': 'Dashboard Name',
+            'dashboard_name': 'Nazwa tablicy',
         }
         widgets = {
             'dashboard_name': forms.TextInput(attrs={'placeholder': ''}),
