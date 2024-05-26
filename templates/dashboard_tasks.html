@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ dashboard.dashboard_name }} - Tasks</title>
+    <title>{{ dashboard.dashboard_name }} - Zadania</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -65,10 +65,18 @@
         }
         .column {
             flex: 1;
-            background-color: #f9f9f9;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .column#tasks-to-do {
+            background-color: #b3ffb3; /* Zielony */
+        }
+        .column#tasks-in-progress {
+            background-color: #ffffb3; /* Żółty */
+        }
+        .column#tasks-done {
+            background-color: #b3d9ff; /* Niebieski */
         }
         .column h2 {
             text-align: center;
@@ -109,6 +117,96 @@
         .column.drag-over {
             border: 2px dashed #002983;
         }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .modal form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .modal form button {
+            align-self: flex-end;
+        }
+        /* Modal styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 500px;
+        border-radius: 10px;
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .modal form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .modal form button {
+        align-self: flex-end;
+    }
     </style>
 </head>
 <body>
@@ -118,134 +216,174 @@
             {{ dashboard.dashboard_name }}
         </div>
         <div class="buttons">
-            <a href="{% url 'home' %}">Boards</a>
-            <a href="{% url 'createTask' dashboard.dashboard_id %}">Create Task</a>
+            <a href="{% url 'home' %}">TABLICE</a>
+            <a href="{% url 'createTask' dashboard.dashboard_id %}">NOWE ZADANIE</a>
         </div>
     </div>
     <div class="container">
         <div class="columns">
             <div class="column" id="tasks-to-do">
-                <h2>Tasks To Do</h2>
+                <h2>TO DO</h2>
                 {% for task in tasks_to_do %}
                     <div class="task" draggable="true" id="task-{{ task.task_id }}">
                         <p><strong>{{ task.task_name }}</strong></p>
                         <p>{{ task.task_description }}</p>
                         <p>Start Date: {{ task.task_start_date }}</p>
                         <p>End Date: {{ task.task_end_date }}</p>
-                        {% comment %} <form method="post" action="{% url 'updateTask' task.task_id %}">
-                            {% csrf_token %}
-                            <select name="status">
-                                {% for key, value in task.STATUS_CHOICES %}
-                                    <option value="{{ key }}" {% if task.task_status == key %}selected{% endif %}>{{ value }}</option>
-                                {% endfor %}
-                            </select>
-                            <button type="submit">Update</button>
-                        </form> {% endcomment %}
+                        <button class="edit-button" data-task-id="{{ task.task_id }}" data-task-name="{{ task.task_name }}" data-task-description="{{ task.task_description }}" data-task-status="{{ task.task_status }}">EDYTUJ</button>
                         <form method="post" action="{% url 'deleteTask' task.task_id %}">
                             {% csrf_token %}
-                            <button type="submit">Delete</button>
+                            <button type="submit">USUŃ</button>
                         </form>
                     </div>
                 {% endfor %}
             </div>
             <div class="column" id="tasks-in-progress">
-                <h2>Tasks In Progress</h2>
+                <h2>DOING</h2>
                 {% for task in tasks_in_progress %}
                     <div class="task" draggable="true" id="task-{{ task.task_id }}">
                         <p><strong>{{ task.task_name }}</strong></p>
                         <p>{{ task.task_description }}</p>
-                        <p>Start Date: {{ task.task_start_date }}</p>
-                        <p>End Date: {{ task.task_end_date }}</p>
-                        {% comment %} <form method="post" action="{% url 'updateTask' task.task_id %}">
-                            {% csrf_token %}
-                            <select name="status">
-                                {% for key, value in task.STATUS_CHOICES %}
-                                    <option value="{{ key }}" {% if task.task_status == key %}selected{% endif %}>{{ value }}</option>
-                                {% endfor %}
-                            </select>
-                            <button type="submit">Update</button>
-                        </form> {% endcomment %}
-                        <form method="post" action="{% url 'deleteTask' task.task_id %}">
-                            {% csrf_token %}
-                            <button type="submit">Delete</button>
-                        </form>
-                    </div>
-                {% endfor %}
+                        <p>Start Date: {{ task.task_start_date }}</
+                            <p>End Date: {{ task.task_end_date }}</p>
+                            <button class="edit-button" data-task-id="{{ task.task_id }}" data-task-name="{{ task.task_name }}" data-task-description="{{ task.task_description }}" data-task-status="{{ task.task_status }}">EDYTUJ</button>
+                            <form method="post" action="{% url 'deleteTask' task.task_id %}">
+                                {% csrf_token %}
+                                <button type="submit">USUŃ</button>
+                            </form>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="column" id="tasks-done">
+                    <h2>DONE</h2>
+                    {% for task in tasks_done %}
+                        <div class="task" draggable="true" id="task-{{ task.task_id }}">
+                            <p><strong>{{ task.task_name }}</strong></p>
+                            <p>{{ task.task_description }}</p>
+                            <p>Start Date: {{ task.task_start_date }}</p>
+                            <p>End Date: {{ task.task_end_date }}</p>
+                            <button class="edit-button" data-task-id="{{ task.task_id }}" data-task-name="{{ task.task_name }}" data-task-description="{{ task.task_description }}" data-task-status="{{ task.task_status }}">EDYTUJ</button>
+                            <form method="post" action="{% url 'deleteTask' task.task_id %}">
+                                {% csrf_token %}
+                                <button type="submit">USUŃ</button>
+                            </form>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
-            <div class="column" id="tasks-done">
-                <h2>Tasks Done</h2>
-                {% for task in tasks_done %}
-                    <div class="task" draggable="true" id="task-{{ task.task_id }}">
-                        <p><strong>{{ task.task_name }}</strong></p>
-                        <p>{{ task.task_description }}</p>
-                        <p>Start Date: {{ task.task_start_date }}</p>
-                        <p>End Date: {{ task.task_end_date }}</p>
-                        {% comment %} <form method="post" action="{% url 'updateTask' task.task_id %}">
-                            {% csrf_token %}
-                            <select name="status">
-                                {% for key, value in task.STATUS_CHOICES %}
-                                    <option value="{{ key }}" {% if task.task_status == key %}selected{% endif %}>{{ value }}</option>
-                                {% endfor %}
-                            </select>
-                            <button type="submit">Update</button>
-                        </form> {% endcomment %}
-                        <form method="post" action="{% url 'deleteTask' task.task_id %}">
-                            {% csrf_token %}
-                            <button type="submit">Delete</button>
-                        </form>
-                    </div>
-                {% endfor %}
+        <!-- The Modal -->
+        <div id="editModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <form id="editTaskForm" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="task_id" id="editTaskId">
+                    <label for="taskName">Nazwa:</label>
+                    <input type="text" id="taskName" name="task_name" required>
+                    <label for="taskDescription">Opis:</label>
+                    <textarea id="taskDescription" name="task_description" required></textarea>
+                    <button type="submit">Zapisz</button>
+                </form>
             </div>
         </div>
-    </div>
+    
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const tasks = document.querySelectorAll('.task');
+                const columns = document.querySelectorAll('.column');
+                const editButtons = document.querySelectorAll('.edit-button');
+                const modal = document.getElementById('editModal');
+                const closeModal = document.querySelector('.modal .close');
+                const editForm = document.getElementById('editTaskForm');
+                const taskIdInput = document.getElementById('editTaskId');
+                const taskNameInput = document.getElementById('taskName');
+                const taskDescriptionInput = document.getElementById('taskDescription');
+        
+                tasks.forEach(task => {
+                    task.addEventListener('dragstart', handleDragStart);
+                    task.addEventListener('dragend', handleDragEnd);
+                });
+        
+                columns.forEach(column => {
+                    column.addEventListener('dragover', handleDragOver);
+                    column.addEventListener('dragenter', handleDragEnter);
+                    column.addEventListener('dragleave', handleDragLeave);
+                    column.addEventListener('drop', handleDrop);
+                });
+        
+                editButtons.forEach(button => {
+                    button.addEventListener('click', function () {
+                        const taskId = this.dataset.taskId;
+                        const taskName = this.dataset.taskName;
+                        const taskDescription = this.dataset.taskDescription;
+        
+                        taskIdInput.value = taskId;
+                        taskNameInput.value = taskName;
+                        taskDescriptionInput.value = taskDescription;
+        
+                        modal.style.display = 'block';
+                    });
+                });
+        
+                closeModal.addEventListener('click', function () {
+                    modal.style.display = 'none';
+                });
+        
+                window.addEventListener('click', function (event) {
+                    if (event.target == modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+        
+                function handleDragStart(e) {
+                    this.classList.add('dragging');
+                    e.dataTransfer.setData('text/plain', this.id);
+                }
+        
+                function handleDragEnd() {
+                    this.classList.remove('dragging');
+                }
+        
+                function handleDragOver(e) {
+                    e.preventDefault();
+                }
+        
+                function handleDragEnter(e) {
+                    e.preventDefault();
+                    this.classList.add('drag-over');
+                }
+        
+                function handleDragLeave() {
+                    this.classList.remove('drag-over');
+                }
+        
+                function handleDrop(e) {
+                    const id = e.dataTransfer.getData('text/plain');
+                    const draggable = document.getElementById(id);
+                    this.appendChild(draggable);
+                    this.classList.remove('drag-over');
+                }
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const tasks = document.querySelectorAll('.task');
-            const columns = document.querySelectorAll('.column');
+                const createTaskModal = document.getElementById('createTaskModal');
+                const createTaskButton = document.querySelector('.buttons a[href="{% url "createTask" dashboard.dashboard_id %}"]');
+                const closeCreateTaskModal = createTaskModal.querySelector('.close');
 
-            tasks.forEach(task => {
-                task.addEventListener('dragstart', handleDragStart);
-                task.addEventListener('dragend', handleDragEnd);
+                createTaskButton.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    createTaskModal.style.display = 'block';
+                });
+
+                closeCreateTaskModal.addEventListener('click', function () {
+                    createTaskModal.style.display = 'none';
+                });
+
+                window.addEventListener('click', function (event) {
+                    if (event.target == createTaskModal) {
+                        createTaskModal.style.display = 'none';
+                    }
+                });
             });
-
-            columns.forEach(column => {
-                column.addEventListener('dragover', handleDragOver);
-                column.addEventListener('dragenter', handleDragEnter);
-                column.addEventListener('dragleave', handleDragLeave);
-                column.addEventListener('drop', handleDrop);
-            });
-
-            function handleDragStart(e) {
-                this.classList.add('dragging');
-                e.dataTransfer.setData('text/plain', this.id);
-            }
-
-            function handleDragEnd() {
-                this.classList.remove('dragging');
-            }
-
-            function handleDragOver(e) {
-                e.preventDefault();
-            }
-
-            function handleDragEnter(e) {
-                e.preventDefault();
-                this.classList.add('drag-over');
-            }
-
-            function handleDragLeave() {
-                this.classList.remove('drag-over');
-            }
-
-            function handleDrop(e) {
-                const id = e.dataTransfer.getData('text/plain');
-                const draggable = document.getElementById(id);
-                this.appendChild(draggable);
-                this.classList.remove('drag-over');
-                
-            }
-        });
-    </script>
-</body>
-</html>
+        </script>
+    </body>
+    </html>
+    

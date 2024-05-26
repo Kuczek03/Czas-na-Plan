@@ -17,8 +17,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 
-
-
 from django.db import IntegrityError
 
 
@@ -42,7 +40,10 @@ def register(request):
 
     return render(request, 'register.html', {'form': form})
 
-
+################################################
+def info(request):
+    # Twój nowy widok dla strony informacyjnej
+    return render(request, 'info.html')
 
 
 def loginPage(request):
@@ -104,6 +105,12 @@ def deleteTask(request, task_id):
         task.delete()
     return redirect('dashboard_tasks', dashboard_id=dashboard_id)
 
+#############################################
+def delete_dashboard(request, dashboard_id):
+    dashboard = get_object_or_404(dashboard, id=dashboard_id)
+    dashboard.delete()
+    return redirect('home')
+#############################################
 
 @login_required(login_url='login')
 def dashboardPage(request):
@@ -165,7 +172,4 @@ def home(request):
         'admin_dashboards': admin_dashboards
     }
     return render(request, 'home.html', context)
-
-def tasks(request):
-    return HttpResponse("tasks")
 

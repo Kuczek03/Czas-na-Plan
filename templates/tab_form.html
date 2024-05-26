@@ -54,18 +54,27 @@
             border-radius: 4px;
             box-sizing: border-box;
         }
-        .login-button, .submit-button {
+        .login-button, .submit-button, .cancel-button {
             width: 100%;
             padding: 10px;
             border: none;
             border-radius: 4px;
-            background-color: #002983;
-            color: white;
             font-size: 16px;
             cursor: pointer;
+            margin-top: 10px;
         }
-        .login-button:hover, .submit-button:hover {
+        .submit-button {
+            background-color: #002983;
+            color: white;
+        }
+        .submit-button:hover {
             background-color: #001d66;
+        }
+        .cancel-button {
+            background-color: #ddd;
+        }
+        .cancel-button:hover {
+            background-color: #ccc;
         }
         .register-link {
             margin-top: 15px;
@@ -97,11 +106,12 @@
     </header>
 
     <div class="container">
-        <h2>Create Dashboard</h2>
+        <h2>Nowa Tablica</h2>
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit" class="submit-button">Create Dashboard</button>
+            <button type="submit" class="submit-button">Stwórz</button>
+            <button type="button" class="cancel-button" onclick="window.history.back()">Anuluj</button>
         </form>
     </div>
 </body>

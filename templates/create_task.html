@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Task</title>
+    <title>Stwórz nowe zadanie</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -26,10 +26,17 @@
             box-sizing: border-box;
         }
         .header .title {
+            font-weight: bold;
             font-size: 20px;
         }
         .header .back-link {
-            color: white;
+            font-weight: bold;
+            background-color: white;
+            color: #002983;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
             text-decoration: none;
             font-size: 16px;
         }
@@ -88,11 +95,11 @@
 </head>
 <body>
     <div class="header">
-        <div class="title">Dashboard</div>
-        <a href="{% url 'dashboard_tasks' dashboard.dashboard_id %}" class="back-link">Back to Dashboard</a>
+        <div class="title">{{ dashboard.dashboard_name }}</div>
+        <a href="{% url 'dashboard_tasks' dashboard.dashboard_id %}" class="back-link">POWRÓT DO TABLICY</a>
     </div>
     <div class="container">
-        <h1>Create Task for {{ dashboard.dashboard_name }}</h1>
+        <h1>Stwórz zadanie dla {{ dashboard.dashboard_name }}</h1>
         <form method="post">
             {% csrf_token %}
             {% for field in form %}
@@ -104,7 +111,7 @@
                     {% endif %}
                 </div>
             {% endfor %}
-            <button type="submit" class="submit-button">Create Task</button>
+            <button type="submit" class="submit-button">Stwórz</button>
         </form>
     </div>
 </body>
