@@ -23,13 +23,15 @@ class TaskForm(forms.ModelForm):
         }
 
 class TabForm(forms.ModelForm):
-    users = forms.ModelMultipleChoiceField(queryset=User.objects.all(), widget=forms.CheckboxSelectMultiple, required=False)
+    users = forms.ModelMultipleChoiceField(queryset=User.objects.all(), widget=forms.CheckboxSelectMultiple, required=False, label='użytkownicy')
 
     class Meta:
         model = Dashboards
-        fields = ['dashboard_name', 'users']
+        fields = ['dashboard_name',]
         labels = {
             'dashboard_name': 'Nazwa tablicy',
+
+
         }
         widgets = {
             'dashboard_name': forms.TextInput(attrs={'placeholder': ''}),

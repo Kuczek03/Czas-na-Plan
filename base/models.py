@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 
 class Tasks(models.Model):
     STATUS_CHOICES = [
@@ -17,6 +18,11 @@ class Tasks(models.Model):
     board_id = models.ForeignKey('Dashboards', on_delete=models.CASCADE, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
+    def clean(self):
+        if self.task_end_date < self.task_start_date:
+            raise ValidationError({
+                'task_end_date': "Data zakończenia zadania nie może być wcześniejsza niż data jego rozpoczęcia."
+            })
     def __str__(self):
         return self.task_name
 
@@ -43,7 +49,7 @@ class Label_tasks(models.Model):
 
 class Dashboards(models.Model):
     dashboard_id = models.AutoField(primary_key=True)
-    dashboard_name = models.CharField(max_length=200)
+    dashboard_name = models.CharField(max_length=50, unique=True, error_messages={'unique': "Ta nazwa tablicy już istnieje. Wybierz inną."})
     dashboard_admin_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='admin_dashboards', editable=False)
     users = models.ManyToManyField(User, through='Users_Dashboards', related_name='dashboards')
 
