@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -14,7 +15,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-        
             height: 100vh;
         }
         header {
@@ -50,6 +50,17 @@
         .back-link:hover {
             text-decoration: underline;
         }
+        .authors {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            font-size: 12px;
+            color: #555;
+        }
+        .gif {
+            width: 100px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -58,9 +69,15 @@
     </header>
 
     <div class="container">
-        <h2>Powitać zacnego Pana</h2>
-        <p>Dodać info</p>
+        <h2>Powitać zacnego Pana Szopa</h2>
+        <img src="{% static 'szop.gif' %}" alt="szop" class="gif">
+        <p>Paweł pozdrawia</p>
         <a href="/" class="back-link">Powrót do strony głównej</a>
+    </div>
+    <div class="authors">
+        <p>Wykonane przez:</p>
+        <p>WEiI: Wiktor Kuczek, Paweł Łopocki, Kacper Łoziński, Szymon Matyka, Gia Minh, Mateusz Matyszczak, Maksymilian Dzień</p>
+        <p>WZ: Jagoda Górnicka, Natalia Dubiak</p>
     </div>
 </body>
 </html>

@@ -160,53 +160,6 @@
         .modal form button {
             align-self: flex-end;
         }
-        /* Modal styles */
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0, 0, 0, 0.4);
-    }
-
-    .modal-content {
-        background-color: #fefefe;
-        margin: 15% auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 80%;
-        max-width: 500px;
-        border-radius: 10px;
-    }
-
-    .close {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-        cursor: pointer;
-    }
-
-    .close:hover,
-    .close:focus {
-        color: black;
-        text-decoration: none;
-        cursor: pointer;
-    }
-
-    .modal form {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .modal form button {
-        align-self: flex-end;
-    }
     </style>
 </head>
 <body>
@@ -230,7 +183,6 @@
                         <p>{{ task.task_description }}</p>
                         <p>Start Date: {{ task.task_start_date }}</p>
                         <p>End Date: {{ task.task_end_date }}</p>
-                        <button class="edit-button" data-task-id="{{ task.task_id }}" data-task-name="{{ task.task_name }}" data-task-description="{{ task.task_description }}" data-task-status="{{ task.task_status }}">EDYTUJ</button>
                         <form method="post" action="{% url 'deleteTask' task.task_id %}">
                             {% csrf_token %}
                             <button type="submit">USUŃ</button>
@@ -246,7 +198,6 @@
                         <p>{{ task.task_description }}</p>
                         <p>Start Date: {{ task.task_start_date }}</
                             <p>End Date: {{ task.task_end_date }}</p>
-                            <button class="edit-button" data-task-id="{{ task.task_id }}" data-task-name="{{ task.task_name }}" data-task-description="{{ task.task_description }}" data-task-status="{{ task.task_status }}">EDYTUJ</button>
                             <form method="post" action="{% url 'deleteTask' task.task_id %}">
                                 {% csrf_token %}
                                 <button type="submit">USUŃ</button>
@@ -262,7 +213,6 @@
                             <p>{{ task.task_description }}</p>
                             <p>Start Date: {{ task.task_start_date }}</p>
                             <p>End Date: {{ task.task_end_date }}</p>
-                            <button class="edit-button" data-task-id="{{ task.task_id }}" data-task-name="{{ task.task_name }}" data-task-description="{{ task.task_description }}" data-task-status="{{ task.task_status }}">EDYTUJ</button>
                             <form method="post" action="{% url 'deleteTask' task.task_id %}">
                                 {% csrf_token %}
                                 <button type="submit">USUŃ</button>
@@ -271,21 +221,6 @@
                     {% endfor %}
                 </div>
             </div>
-        <!-- The Modal -->
-        <div id="editModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <form id="editTaskForm" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="task_id" id="editTaskId">
-                    <label for="taskName">Nazwa:</label>
-                    <input type="text" id="taskName" name="task_name" required>
-                    <label for="taskDescription">Opis:</label>
-                    <textarea id="taskDescription" name="task_description" required></textarea>
-                    <button type="submit">Zapisz</button>
-                </form>
-            </div>
-        </div>
     
         <script>
             document.addEventListener('DOMContentLoaded', function () {

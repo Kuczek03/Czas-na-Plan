@@ -23,7 +23,7 @@ class TaskForm(forms.ModelForm):
         }
 
 class TabForm(forms.ModelForm):
-    users = forms.ModelMultipleChoiceField(queryset=User.objects.all(), widget=forms.CheckboxSelectMultiple, required=False, label='użytkownicy')
+    users = forms.ModelMultipleChoiceField(queryset=User.objects.all(), widget=forms.CheckboxSelectMultiple, required=False, label='Użytkownicy')
 
     class Meta:
         model = Dashboards

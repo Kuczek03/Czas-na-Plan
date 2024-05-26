@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ustawienia</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #002983;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header .title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .header .title2 {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            font-family: 'Pacifico', cursive;
+        }
+        .header .buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .header .buttons a, .header .buttons button {
+            background-color: white;
+            color: #002983;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .header .buttons a:hover, .header .buttons button:hover {
+            background-color: #002983;
+            color: white;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button[type="submit"] {
+            background-color: #002983;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="title2">Czas na plan</div>
+        <div class="title">Ustawienia</div>
+        <div class="buttons">
+            <a href="{% url 'home' %}" class="home-button">STRONA GŁÓWNA</a>
+        </div>
+    </div>
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+            <label for="id_username">Nazwa użytkownika:</label><br>
+            <input type="text" id="id_username" name="username" value="{{ request.user.username }}"><br>
+            <label for="id_email">Email:</label><br>
+            <input type="email" id="id_email" name="email" value="{{ request.user.email }}"><br>
+            <label for="id_password1">Nowe hasło:</label><br>
+            <input type="password" id="id_password1" name="password1"><br>
+            <label for="id_password2">Potwierdź hasło:</label><br>
+            <input type="password" id="id_password2" name="password2"><br>
+            <button type="submit">Zapisz zmiany</button>
+        </form>
+    </div>
+</body>
+</html>
