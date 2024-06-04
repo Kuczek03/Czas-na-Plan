@@ -99,6 +99,7 @@
             border-bottom: 1px solid #ddd;
         }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <header>
@@ -110,9 +111,55 @@
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
+            <div class="form-group">
+                <label for="search">Wyszukaj użytkowników:</label>
+                <input type="text" id="search" placeholder="Wyszukaj użytkowników...">
+                <ul id="results" class="user-list"></ul>
+            </div>
+            <div id="selected-users">
+                <h3>Wybrani użytkownicy:</h3>
+                <ul id="selected-users-list" class="user-list"></ul>
+            </div>
             <button type="submit" class="submit-button">Stwórz</button>
             <button type="button" class="cancel-button" onclick="window.history.back()">Anuluj</button>
         </form>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#search').on('keyup', function() {
+                var query = $(this).val();
+                $.ajax({
+                    url: '{% url "search_users" %}',
+                    data: {'q': query},
+                    success: function(data) {
+                        $('#results').empty();
+                        if (query) {
+                            for (var i = 0; i < data.length; i++) {
+                                if (data[i].id != {{ request.user.id }}) {
+                                    $('#results').append('<li data-id="' + data[i].id + '">' + data[i].username + '</li>');
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+
+            $(document).on('click', '#results li', function() {
+                var userId = $(this).data('id');
+                var username = $(this).text();
+                $('#selected-users-list').append('<li>' + username + ' <span class="remove-user" data-id="' + userId + '">Usuń</span></li>');
+                // Dodaj ukryte pole z identyfikatorem użytkownika do formularza
+                $('#selected-users').append('<input type="hidden" name="users" value="' + userId + '">');
+                $(this).remove();
+            });
+
+            $(document).on('click', '.remove-user', function() {
+                var userId = $(this).data('id');
+                $('input[name="users"][value="' + userId + '"]').remove();
+                $(this).parent().remove();
+            });
+        });
+    </script>
 </body>
 </html>

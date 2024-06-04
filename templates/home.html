@@ -184,25 +184,26 @@
                 <a href="{% url 'login' %}">Zaloguj się</a>
             {% endif %}
         </nav>
-
-        {% if admin_dashboards %}
-        <div class="admin-dashboards">
-            <h2>Tablice</h2>
-            {% for dashboard in admin_dashboards %}
-                <div class="dashboard">
-                    <a href="{% url 'dashboard_tasks' dashboard.dashboard_id %}">
-                        {{ dashboard.dashboard_name }}
-                    </a>
+    {% if admin_dashboards %}
+    <div class="admin-dashboards">
+        <h2>Tablice</h2>
+        {% for dashboard in admin_dashboards %}
+            <div class="dashboard">
+                <a href="{% url 'dashboard_tasks' dashboard.dashboard_id %}">
+                    {{ dashboard.dashboard_name }}
+                </a>
+                {% if dashboard.dashboard_admin_id == request.user %}
                     <form method="post" action="{% url 'delete_dashboard' dashboard.dashboard_id %}" style="display: inline;">
                         {% csrf_token %}
                         <button type="submit" class="delete-button">Usuń</button>
                     </form>
-                </div>
-            {% endfor %}
-        </div>
-        {% else %}
-            <p>Nie masz jeszcze żadnych tablic.</p>
-        {% endif %}
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p>Nie masz jeszcze żadnych tablic.</p>
+    {% endif %}
     </div>
 </body>
 </html>

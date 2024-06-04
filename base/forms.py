@@ -13,29 +13,28 @@ class TaskForm(forms.ModelForm):
             'task_start_date': 'Data rozpoczęcia',
             'task_end_date': 'Data zakończenia',
             'task_status': 'Status',
-            'board_id': 'Tablica'
+            'board_id': ' '
         }
         widgets = {
             'task_name': forms.TextInput(attrs={'placeholder': ''}),
             'task_description': forms.TextInput(attrs={'placeholder': ''}),
             'task_start_date': forms.DateInput(attrs={'type': 'date'}),
             'task_end_date': forms.DateInput(attrs={'type': 'date'}),
+            'board_id': forms.HiddenInput(),
+
         }
 
 class TabForm(forms.ModelForm):
-    users = forms.ModelMultipleChoiceField(queryset=User.objects.all(), widget=forms.CheckboxSelectMultiple, required=False, label='Użytkownicy')
-
     class Meta:
         model = Dashboards
-        fields = ['dashboard_name',]
+        fields = ['dashboard_name']
         labels = {
             'dashboard_name': 'Nazwa tablicy',
-
-
         }
         widgets = {
             'dashboard_name': forms.TextInput(attrs={'placeholder': ''}),
         }
+
 
 class UserRegisterForm(forms.Form):
     username = forms.CharField(max_length=150)

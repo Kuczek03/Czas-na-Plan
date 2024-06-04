@@ -1,7 +1,5 @@
 
 # ----- Uwaga ----- #
-# Do naprawy: kiedy dodaje się dashboard i nie zaznaczy się siebie to nie doda go wgl do żadnego użytkownika a jeśli
-# dodasz siebie to dashboard na twojej stronie głównej będzie podwójny chuj wie ocb
 # do zrobienia: przypisywanie tasków do użytkowników, lączenie z kalendarzem google, priorytety
 
 from django.shortcuts import render
@@ -16,9 +14,16 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
 
 from django.db import IntegrityError
 
+
+def search_users(request):
+    query = request.GET.get('q', '')
+    users = User.objects.filter(username__icontains=query)
+    users_list = list(users.values('id', 'username'))
+    return JsonResponse(users_list, safe=False)
 
 def register(request):
     if request.method == 'POST':
@@ -68,20 +73,18 @@ def loginPage(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        try:
-            user = User.objects.get(username=username)
-        except:
-           messages.error(request, "użytkownik nie istnieje")
-           user = authenticate(request, username=username, password=password)
+
+        # Używamy authenticate zamiast próbować ręcznie pobierać użytkownika
+        user = authenticate(request, username=username, password=password)
 
         if user is not None:
             login(request, user)
             return redirect('home')
         else:
-            messages.error(request,"username or password incorrect")
+            messages.error(request, "Nazwa użytkownika lub hasło niepoprawne!")
 
     context = {}
-    return render(request,'login_register.html',context)
+    return render(request, 'login_register.html', context)
 
 
 def logoutUser(request):
@@ -100,10 +103,12 @@ def createTask(request, dashboard_id):
             task.save()
             return redirect('dashboard_tasks', dashboard_id=dashboard_id)
     else:
-        form = TaskForm()
+        initial_data = {'board_id': dashboard}  # Przekazanie wartości początkowej do pola board_id
+        form = TaskForm(initial=initial_data)
 
     context = {'form': form, 'dashboard': dashboard}
     return render(request, 'create_task.html', context)
+
 
 @login_required(login_url='login')
 def deleteTask(request, task_id):
@@ -131,16 +136,18 @@ def dashboardPage(request):
             dashboard = form.save(commit=False)
             dashboard.dashboard_admin_id = request.user
             dashboard.save()
-            form.save_m2m()
-            for user in form.cleaned_data['users']:
-                Users_Dashboards.objects.create(user_id=user, dashboard_id=dashboard)
+            selected_users = request.POST.getlist('users')
+            selected_users.append(str(request.user.id))
+            dashboard.users.set(selected_users)
 
+            messages.success(request, 'Tablica została stworzona.')
             return redirect('home')
     else:
         form = TabForm()
 
     context = {'form': form}
     return render(request, 'tab_form.html', context)
+
 
 @login_required(login_url='login')
 def addUser(request):

@@ -49,12 +49,12 @@ class Label_tasks(models.Model):
 
 class Dashboards(models.Model):
     dashboard_id = models.AutoField(primary_key=True)
-    dashboard_name = models.CharField(max_length=50, unique=True, error_messages={'unique': "Ta nazwa tablicy już istnieje. Wybierz inną."})
+    dashboard_name = models.CharField(max_length=50, error_messages={'unique': "Ta nazwa tablicy już istnieje. Wybierz inną."})
     dashboard_admin_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='admin_dashboards', editable=False)
     users = models.ManyToManyField(User, through='Users_Dashboards', related_name='dashboards')
 
     def __str__(self):
-        return self.dashboard_name
+        return f"{self.dashboard_name} - {self.dashboard_admin_id.username}"
 
 class Users_Dashboards(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
