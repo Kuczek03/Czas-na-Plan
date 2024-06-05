@@ -20,16 +20,16 @@
             justify-content: space-between;
             align-items: center;
         }
-        .header .title {
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-        }
         .header .title2 {
             font-size: 24px;
             font-weight: bold;
             text-align: center;
             font-family: 'Pacifico', cursive;
+        }
+        .header .title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
         }
         .header .buttons {
             display: flex;
@@ -85,6 +85,13 @@
         button[type="submit"]:hover {
             background-color: #0056b3;
         }
+        .authors {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            font-size: 12px;
+            color: #555;
+        }
     </style>
 </head>
 <body>
@@ -96,7 +103,7 @@
         </div>
     </div>
     <div class="container">
-        <form method="post">
+        <form method="post" id="settings-form">
             {% csrf_token %}
             <label for="id_username">Nazwa użytkownika:</label><br>
             <input type="text" id="id_username" name="username" value="{{ request.user.username }}"><br>
@@ -106,8 +113,22 @@
             <input type="password" id="id_password1" name="password1"><br>
             <label for="id_password2">Potwierdź hasło:</label><br>
             <input type="password" id="id_password2" name="password2"><br>
-            <button type="submit">Zapisz zmiany</button>
+            <button type="submit" id="submit-button">Zapisz zmiany</button>
         </form>
+    </div>
+
+    <script>
+        document.getElementById("settings-form").addEventListener("submit", function(event) {
+            var confirmChange = confirm("Czy na pewno chcesz zapisać zmiany?");
+            if (!confirmChange) {
+                event.preventDefault(); // Zapobiega domyślnej akcji (wysłaniu formularza)
+            }
+        });
+    </script>
+    <div class="authors">
+        <p>Wykonane przez:</p>
+        <p>WEiI: Wiktor Kuczek, Paweł Łopocki, Kacper Łoziński, Szymon Matyka, Gia Minh, Mateusz Matyszczak, Maksymilian Dzień</p>
+        <p>WZ: Jagoda Górnicka, Natalia Dubiak</p>
     </div>
 </body>
 </html>

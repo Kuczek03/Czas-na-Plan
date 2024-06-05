@@ -163,16 +163,45 @@
         .delete-button:hover {
             background-color: #002983;
         }
+        .authors {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            font-size: 12px;
+            color: #555;
+        }
+        .cookie-banner {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #002983;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 14px;
+            z-index: 1000;
+        }
+        .cookie-banner button {
+            background-color: white;
+            color: #002983;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            margin-left: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .cookie-banner button:hover {
+            background-color: #ddd;
+        }
     </style>
 </head>
 <body>
     <div class="header">
         <div class="title2">Czas na plan</div>
         <div class="buttons">
-            {% if request.user.is_authenticated %}
             <a href="{% url 'settings' %}" class="settings-button">Ustawienia</a>
             <a href="{% url 'logout' %}" class="logout-button">Wyloguj</a>
-            {% endif %}
         </div>
     </div>
     <div class="container">
@@ -184,26 +213,54 @@
                 <a href="{% url 'login' %}">Zaloguj się</a>
             {% endif %}
         </nav>
-    {% if admin_dashboards %}
-    <div class="admin-dashboards">
-        <h2>Tablice</h2>
-        {% for dashboard in admin_dashboards %}
-            <div class="dashboard">
-                <a href="{% url 'dashboard_tasks' dashboard.dashboard_id %}">
-                    {{ dashboard.dashboard_name }}
-                </a>
-                {% if dashboard.dashboard_admin_id == request.user %}
-                    <form method="post" action="{% url 'delete_dashboard' dashboard.dashboard_id %}" style="display: inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="delete-button">Usuń</button>
-                    </form>
-                {% endif %}
+        {% if admin_dashboards %}
+            <div class="admin-dashboards">
+                <h2>Tablice</h2>
+                {% for dashboard in admin_dashboards %}
+                    <div class="dashboard">
+                        <a href="{% url 'dashboard_tasks' dashboard.dashboard_id %}">
+                            {{ dashboard.dashboard_name }}
+                        </a>
+                        {% if dashboard.dashboard_admin_id == request.user %}
+                            <form id="delete-form-{{ dashboard.dashboard_id }}" action="{% url 'delete_dashboard' dashboard.dashboard_id %}" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="delete-button">Usuń</button>
+                            </form>
+            <script>
+                document.getElementById("delete-form-{{ dashboard.dashboard_id }}").addEventListener("submit", function(event) {
+                var confirmDelete = confirm("Czy na pewno chcesz usunąć tablicę?");
+                if (!confirmDelete) {
+                    event.preventDefault(); // Prevents the default action (deleting the dashboard)
+                }
+                });
+            </script>
+            {% endif %}
             </div>
-        {% endfor %}
+            {% endfor %}
+            </div>
+            {% else %}
+            <p>Nie masz jeszcze żadnych tablic.</p>
+            {% endif %}
+            </div>
+    <div class="authors">
+        <p>Wykonane przez:</p>
+        <p>WEiI: Wiktor Kuczek, Paweł Łopocki, Kacper Łoziński, Szymon Matyka, Gia Minh, Mateusz Matyszczak, Maksymilian Dzień</p>
+        <p>WZ: Jagoda Górnicka, Natalia Dubiak</p>
     </div>
-    {% else %}
-        <p>Nie masz jeszcze żadnych tablic.</p>
-    {% endif %}
+    <div class="cookie-banner" id="cookie-banner">
+        <span>Ta strona używa plików cookies, aby zapewnić najlepszą jakość korzystania z naszej witryny. Kontynuując korzystanie z tej strony, zgadzasz się na użycie plików cookies.</span>
+        <button onclick="acceptCookies()">Akceptuję</button>
     </div>
+    <script>
+        function acceptCookies() {
+            document.getElementById('cookie-banner').style.display = 'none';
+            document.cookie = "cookies_accepted=true; path=/; max-age=" + (60*60*24*365);
+        }
+        window.onload = function() {
+            if (document.cookie.indexOf('cookies_accepted=true') !== -1) {
+                document.getElementById('cookie-banner').style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>
