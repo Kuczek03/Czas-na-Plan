@@ -97,6 +97,9 @@
         .user-list li {
             padding: 8px 0;
             border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .remove-user {
             background-color: #002983;
@@ -123,9 +126,8 @@
     <div class="container">
         <h2>Nowa Tablica</h2>
         <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
             <div class="form-group">
+                <label for="board-name">{% csrf_token %} {{ form.as_p }}</label>
                 <label for="search">Wyszukaj użytkowników:</label>
                 <input type="text" id="search" placeholder="Wyszukaj użytkowników...">
                 <ul id="results" class="user-list"></ul>

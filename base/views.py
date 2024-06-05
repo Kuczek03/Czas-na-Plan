@@ -39,7 +39,7 @@ def register(request):
                 messages.success(request, f'Account created for {username}!')
                 return redirect('login')
             except IntegrityError:
-                messages.error(request, 'Username already exists. Please choose another one.')
+                messages.error(request, 'Nazwa użytkownika jest już zajęta!')
     else:
         form = UserRegisterForm()
 
@@ -139,8 +139,6 @@ def dashboardPage(request):
             selected_users = request.POST.getlist('users')
             selected_users.append(str(request.user.id))
             dashboard.users.set(selected_users)
-
-            messages.success(request, 'Tablica została stworzona.')
             return redirect('home')
     else:
         form = TabForm()
