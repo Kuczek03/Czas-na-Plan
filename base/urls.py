@@ -14,5 +14,4 @@ urlpatterns = [
     path('delete-dashboard/<int:dashboard_id>/', views.deleteDashboard, name='delete_dashboard'),
     path('dashboard/<int:dashboard_id>/', views.dashboard_tasks, name='dashboard_tasks'),
     path('search_users/', views.search_users, name='search_users')
-
 ]

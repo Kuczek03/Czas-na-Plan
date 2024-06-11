@@ -45,10 +45,9 @@ def register(request):
 
     return render(request, 'register.html', {'form': form})
 
-#############################################
 def info(request):
     return render(request, 'info.html')
-#############################################
+
 def settings(request):
     if request.method == 'POST':
         user = request.user
@@ -67,7 +66,6 @@ def settings(request):
         form = PasswordChangeForm(request.user)
 
     return render(request, 'settings.html', {'form': form})
-#############################################
 
 def loginPage(request):
     if request.method == 'POST':

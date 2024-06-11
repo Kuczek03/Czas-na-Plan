@@ -62,3 +62,10 @@ class Users_Dashboards(models.Model):
 
     def __int__(self):
         return self.user_id
+
+class Task(models.Model):
+    task_name = models.CharField(max_length=100)
+    task_description = models.TextField()
+    task_start_date = models.DateField()
+    task_end_date = models.DateField()
+    is_important = models.BooleanField(default=False)
