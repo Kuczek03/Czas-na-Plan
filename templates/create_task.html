@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Task</title>
+    <title>Stwórz nowe zadanie</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -26,10 +26,17 @@
             box-sizing: border-box;
         }
         .header .title {
+            font-weight: bold;
             font-size: 20px;
         }
         .header .back-link {
-            color: white;
+            font-weight: bold;
+            background-color: white;
+            color: #002983;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
             text-decoration: none;
             font-size: 16px;
         }
@@ -61,8 +68,8 @@
             margin-bottom: 5px;
             font-weight: bold;
         }
-        form .form-group input, 
-        form .form-group select, 
+        form .form-group input,
+        form .form-group select,
         form .form-group textarea {
             width: 100%;
             padding: 10px;
@@ -84,15 +91,22 @@
         .submit-button:hover {
             background-color: #002983;
         }
+        .authors {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            font-size: 12px;
+            color: #555;
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <div class="title">Dashboard</div>
-        <a href="{% url 'dashboard_tasks' dashboard.dashboard_id %}" class="back-link">Back to Dashboard</a>
+        <div class="title">{{ dashboard.dashboard_name }}</div>
+        <a href="{% url 'dashboard_tasks' dashboard.dashboard_id %}" class="back-link">POWRÓT DO TABLICY</a>
     </div>
     <div class="container">
-        <h1>Create Task for {{ dashboard.dashboard_name }}</h1>
+        <h1>Stwórz zadanie dla {{ dashboard.dashboard_name }}</h1>
         <form method="post">
             {% csrf_token %}
             {% for field in form %}
@@ -104,8 +118,13 @@
                     {% endif %}
                 </div>
             {% endfor %}
-            <button type="submit" class="submit-button">Create Task</button>
+            <button type="submit" class="submit-button">Stwórz</button>
         </form>
+    </div>
+    <div class="authors">
+        <p>Wykonane przez:</p>
+        <p>WEiI: Wiktor Kuczek, Paweł Łopocki, Kacper Łoziński, Szymon Matyka, Gia Minh, Mateusz Matyszczak, Maksymilian Dzień</p>
+        <p>WZ: Jagoda Górnicka, Natalia Dubiak</p>
     </div>
 </body>
 </html>

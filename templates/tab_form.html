@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
@@ -54,18 +54,27 @@
             border-radius: 4px;
             box-sizing: border-box;
         }
-        .login-button, .submit-button {
+        .login-button, .submit-button, .cancel-button {
             width: 100%;
             padding: 10px;
             border: none;
             border-radius: 4px;
-            background-color: #002983;
-            color: white;
             font-size: 16px;
             cursor: pointer;
+            margin-top: 10px;
         }
-        .login-button:hover, .submit-button:hover {
+        .submit-button {
+            background-color: #002983;
+            color: white;
+        }
+        .submit-button:hover {
             background-color: #001d66;
+        }
+        .cancel-button {
+            background-color: #ddd;
+        }
+        .cancel-button:hover {
+            background-color: #ccc;
         }
         .register-link {
             margin-top: 15px;
@@ -88,8 +97,26 @@
         .user-list li {
             padding: 8px 0;
             border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .remove-user {
+            background-color: #002983;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .authors {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            font-size: 12px;
+            color: #555;
         }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <header>
@@ -97,12 +124,63 @@
     </header>
 
     <div class="container">
-        <h2>Create Dashboard</h2>
+        <h2>Nowa Tablica</h2>
         <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="submit-button">Create Dashboard</button>
+            <div class="form-group">
+                <label for="board-name">{% csrf_token %} {{ form.as_p }}</label>
+                <label for="search">Wyszukaj użytkowników:</label>
+                <input type="text" id="search" placeholder="Wyszukaj użytkowników...">
+                <ul id="results" class="user-list"></ul>
+            </div>
+            <div id="selected-users">
+                <h3>Wybrani użytkownicy:</h3>
+                <ul id="selected-users-list" class="user-list"></ul>
+            </div>
+            <button type="submit" class="submit-button">Stwórz</button>
+            <button type="button" class="cancel-button" onclick="window.history.back()">Anuluj</button>
         </form>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#search').on('keyup', function() {
+                var query = $(this).val();
+                $.ajax({
+                    url: '{% url "search_users" %}',
+                    data: {'q': query},
+                    success: function(data) {
+                        $('#results').empty();
+                        if (query) {
+                            for (var i = 0; i < data.length; i++) {
+                                if (data[i].id != {{ request.user.id }}) {
+                                    $('#results').append('<li data-id="' + data[i].id + '">' + data[i].username + '</li>');
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+
+            $(document).on('click', '#results li', function() {
+                var userId = $(this).data('id');
+                var username = $(this).text();
+                $('#selected-users-list').append('<li>' + username + ' <span class="remove-user" data-id="' + userId + '">Usuń</span></li>');
+                // Dodaj ukryte pole z identyfikatorem użytkownika do formularza
+                $('#selected-users').append('<input type="hidden" name="users" value="' + userId + '">');
+                $(this).remove();
+            });
+
+            $(document).on('click', '.remove-user', function() {
+                var userId = $(this).data('id');
+                $('input[name="users"][value="' + userId + '"]').remove();
+                $(this).parent().remove();
+            });
+        });
+    </script>
+    <div class="authors">
+        <p>Wykonane przez:</p>
+        <p>WEiI: Wiktor Kuczek, Paweł Łopocki, Kacper Łoziński, Szymon Matyka, Gia Minh, Mateusz Matyszczak, Maksymilian Dzień</p>
+        <p>WZ: Jagoda Górnicka, Natalia Dubiak</p>
     </div>
 </body>
 </html>
